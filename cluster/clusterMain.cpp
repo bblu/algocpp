@@ -1,4 +1,4 @@
-#include "Kmeans.h"
+#include "kmeans.h"
 using namespace Cluster;
 int main()
 {

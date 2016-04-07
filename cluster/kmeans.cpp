@@ -1,5 +1,5 @@
 
-#include "Kmeans.h"
+#include "kmeans.h"
 
 using namespace Cluster;
 
@@ -30,7 +30,7 @@ void Kmeans::cluster(KmsNodeVector & in, KmsNodeVector &out)
 	}
 	int c = 0;
 	for (KmsNode *n : out){
-		printf("cen[%i]child=%i\n", n->id, n->children.size());
+		printf("cen[%i]child=%i\n", n->id, (int)n->children.size());
 		c += n->children.size();
 	}
 	printf("rr--ac=%i\n", c);
@@ -40,7 +40,7 @@ void Kmeans::cluster(KmsNodeVector & in, KmsNodeVector &out)
 		}
 		c = 0;
 		for (KmsNode *n : out){
-			printf("cen[%i]child=%i\n", n->id, n->children.size());
+			printf("cen[%i]child=%i\n", n->id,(int)n->children.size());
 			c += n->children.size();
 		}
 		printf("rr--ac=%i\n", c);

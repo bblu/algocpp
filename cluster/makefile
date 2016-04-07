@@ -1,6 +1,12 @@
+CCC=g++ -std=c++11
+cluster:cluster.o kmeans.o clusterMain.o
+	$(CCC) -o cluster cluster.o kmeans.o clusterMain.o
+cluster.o:cluster.cpp cluster.h
+	$(CCC) -c cluster.cpp
+kmeans.o:kmeans.cpp kmeans.h
+	$(CCC) -c kmeans.cpp
+clusterMain.o:clusterMain.cpp cluster.cpp kmeans.cpp
+	$(CCC) -c  cluster.cpp kmeans.cpp clusterMain.cpp
 
-cluster:cluster.o kmeans.o
-	g++ -std=c++11 -o cluster cluster.cpp kmeans.cpp clusterMain.cpp
-
-test:cluster.o
-	g++ -std=gnu++11 -o cluster cluster.cpp
+clean:
+	rm *.o cluster
