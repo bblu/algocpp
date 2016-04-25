@@ -1,4 +1,6 @@
 *.swp
+*.swn
+*.swo
 *.o
 cluster/cluster
 dist/
