@@ -18,7 +18,7 @@ struct BucketState
     BucketState(const int *buckets);
     BucketState(const BucketState& state);
 
-    void setBuckets(int *buckets);
+    void setBuckets(const int *buckets);
     bool isBucketEmpty(int bucket);
     bool isSameState(const BucketState& state) const;
     bool canTakeDumpAction(int from, int to);

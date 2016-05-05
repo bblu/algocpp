@@ -1,4 +1,4 @@
-CCC=g++
+CCC=g++ -g
 waterBucket:waterbucket.o
 	$(CCC) -o waterBucket waterbucket.o
 waterbucket.o:waterbucket.cpp waterbucket.h

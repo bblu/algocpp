@@ -8,39 +8,39 @@
 #include "waterbucket.h"
 
 int bucket_capicity[BUCKETS_COUNT]    = {8, 5, 3};
-int bucket_begin_state[BUCKETS_COUNT] = {8, 0, 0};
+int bucket_start_state[BUCKETS_COUNT] = {8, 0, 0};
 int bucket_final_state[BUCKETS_COUNT] = {4, 4, 0};
 
 void SearchState(std::deque<BucketState> &states);
 
 BucketState::BucketState()
 {
-     SetBuckets(bucket_init_state);
-     SetAction(8, -1, 0);
+    setBuckets(bucket_start_state);
+    setAction(8, -1, 0);
  }
  
 BucketState::BucketState(const int *buckets)
 {
-    SetBuckets(buckets);
-    SetAction(8, -1, 0);
+    setBuckets(buckets);
+    setAction(8, -1, 0);
 }
 
 BucketState::BucketState(const BucketState& state)
 {
-    SetBuckets((const int *)state.bucket_s);
-    SetAction(state.curAction.water, state.curAction.from, state.curAction.to);
+    setBuckets((const int *)state.bucket_s);
+    setAction(state.curAction.water, state.curAction.from, state.curAction.to);
 }
 
 bool BucketState::isSameState(const BucketState &that) const
 {
     for(int i = 0; i < BUCKETS_COUNT; ++i){
-        if(bucket_s[i] != state.bucket_s[i])
+        if(bucket_s[i] != that.bucket_s[i])
             return false;
     }
     return true;
 }
 
-void BucketState::setBuckets(int *buckets){
+void BucketState::setBuckets(const int *buckets){
         memcpy(bucket_s,buckets,sizeof(int)*BUCKETS_COUNT);
 }
 bool BucketState::isBucketEmpty(int bucket)
@@ -53,7 +53,7 @@ bool BucketState::canTakeDumpAction(int from, int to)
 	assert((from >= 0) && (from < BUCKETS_COUNT));
 	assert((to >= 0) && (to < BUCKETS_COUNT));
 		
-	if( (from != to) && !IsBucketEmpty(from) && !IsBucketEmpty(to))
+	if( (from != to) && !isBucketEmpty(from) && !isBucketEmpty(to))
 		return true;
 	return false;
 }
@@ -79,7 +79,7 @@ bool BucketState::dumpWater(int from, int to, BucketState &next)
         }
 
         if(dump_water > 0){
-            next.setAction(dump_water, form, to);
+            next.setAction(dump_water, from, to);
             return true;
         }
         return false;
@@ -91,17 +91,19 @@ bool BucketState::isFinalState()
 }
 void BucketState::printState()
 {
-	std::cout << "Dump " << curAction.water << "water from " <<
-		curAction.from+1 << "to " << curAction.to+1 << ", " << 
-		"Buckets water state is: ";
-	for(int i=0; i< BUCKET_COUNT; ++i)
+	std::cout << "Dump " << curAction.water << " water from " <<
+		curAction.from << " to " << curAction.to << ", " << 
+		" and state is:[ ";
+	for(int i=0; i< BUCKETS_COUNT; ++i)
 		std::cout << bucket_s[i] << " ";
-	std::cout << std::endl;
+	std::cout << " ]" <<std::endl;
 }
 //------------------------main----------------------------------
+using namespace std;
+
 bool IsSameBucketState(BucketState state1, BucketState state2)
 {
-    return state1.IsSameState(state2);
+    return state1.isSameState(state2);
 }
 
 bool IsProcessedState(std::deque<BucketState> &states, 
@@ -118,6 +120,7 @@ void SearchStateOnAction(std::deque<BucketState> &states,
     BucketState &current, int from, int to)
 {
 	if(current.canTakeDumpAction(from, to)){
+        cout << "DumpAction from " << from << " to " << to;
 		BucketState next;
 		bool bDump = current.dumpWater(from, to, next);
 
@@ -129,6 +132,14 @@ void SearchStateOnAction(std::deque<BucketState> &states,
 	}
 }
 
+void PrintResult(deque<BucketState> &states)
+{
+	cout << "Find Result:" << endl;
+	for_each(states.begin(), states.end(), 
+		mem_fun_ref(&BucketState::printState));
+	cout << endl;
+}
+
 void SearchState(std::deque<BucketState> &states)
 {
 	BucketState current = states.back();
@@ -137,11 +148,24 @@ void SearchState(std::deque<BucketState> &states)
 		PrintResult(states);
 		return;
 	}
-
+ 
 	for(int j=0; j<BUCKETS_COUNT; ++j){
 		for(int i=0; i<BUCKETS_COUNT; ++i){
 			SearchStateOnAction(states, current, i, j);
 		}
 	}
 
+}
+
+int main(int argc, char* argv[])
+{
+	deque<BucketState> states;
+	BucketState init;
+    init.printState();
+	states.push_back(init);
+	SearchState(states);
+
+	assert(states.size()==1);
+
+	return 0;
 }
