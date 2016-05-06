@@ -1,2 +1,8 @@
 # alogcpp
-algorithm in cpp
+algorithm for reading or work
+
+## cluster
+* kmeans
+
+## puzzle
+* waterbucket
