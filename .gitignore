@@ -2,5 +2,11 @@
 *.swn
 *.swo
 *.o
+*.opensdf
+*.sdf
+*.suo
+Debug
+Release
+obj
 cluster/cluster
 dist/

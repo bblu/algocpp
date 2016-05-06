@@ -46,14 +46,20 @@ void BucketState::setBuckets(const int *buckets){
 bool BucketState::isBucketEmpty(int bucket)
 {
     assert((bucket >= 0) && (bucket < BUCKETS_COUNT)); 
-    return (bucket_s[bucket] >= bucket_capicity[bucket]);
+    return (bucket_s[bucket] == 0);
 }
+bool BucketState::isBucketFull(int bucket)
+{
+	assert((bucket >= 0) && (bucket < BUCKETS_COUNT));
+	return (bucket_s[bucket] >= bucket_capicity[bucket]);
+}
+
 bool BucketState::canTakeDumpAction(int from, int to)
 {
 	assert((from >= 0) && (from < BUCKETS_COUNT));
 	assert((to >= 0) && (to < BUCKETS_COUNT));
 		
-	if( (from != to) && !isBucketEmpty(from) && !isBucketEmpty(to))
+	if( (from != to) && !isBucketEmpty(from) && !isBucketFull(to))
 		return true;
 	return false;
 }
@@ -80,6 +86,7 @@ bool BucketState::dumpWater(int from, int to, BucketState &next)
 
         if(dump_water > 0){
             next.setAction(dump_water, from, to);
+			next.printState();
             return true;
         }
         return false;
@@ -120,7 +127,7 @@ void SearchStateOnAction(std::deque<BucketState> &states,
     BucketState &current, int from, int to)
 {
 	if(current.canTakeDumpAction(from, to)){
-        cout << "DumpAction from " << from << " to " << to;
+		//cout << "DumpAction from " << from << " to " << to << endl;
 		BucketState next;
 		bool bDump = current.dumpWater(from, to, next);
 
@@ -151,6 +158,8 @@ void SearchState(std::deque<BucketState> &states)
  
 	for(int j=0; j<BUCKETS_COUNT; ++j){
 		for(int i=0; i<BUCKETS_COUNT; ++i){
+			if (j == 1 && i == 0)
+				bool x = 1;
 			SearchStateOnAction(states, current, i, j);
 		}
 	}
