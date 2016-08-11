@@ -5,8 +5,5 @@
 *.opensdf
 *.sdf
 *.suo
-Debug
-Release
+*.out
 obj
-cluster/cluster
-dist/
