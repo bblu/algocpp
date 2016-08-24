@@ -15,6 +15,7 @@ Some examples:
 " 3+5 / 2 " = 5
 Note: Do not use the eval built-in library function.
 ****************************************************/
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <string>
@@ -22,40 +23,67 @@ Note: Do not use the eval built-in library function.
 using namespace std;
 
 class Solution {
-	struct Op{
-		string val;
-		Op *left;
-		Op *right;
-		Op(string str):val(str),left(NULL),right(NULL){}
-	}
 public:
     int calculate(string s) {
-    	Op *root=NULL;
-		string val;
+		stack<char> ops;
+		stack<int> vals;
 		for(int i=0; i< s.size(); i++){
 			char cur = s[i];
-			if(isOp(cur)){
-				Op * op = new Op(val);
-				if(root==NULL){
-					root = new Op(cur);
-					root->left = op;
-				}
-				else
-				{
-
-				}
-				val.clear();
-			}else{
+			if(isspace(cur))
+				continue;
+			if(isdigit(cur)){
+				string val;
 				val+=cur;
+				while(isdigit(s[i+1])){
+					val+=s[i+1];
+					i++;
+				}
+				// atoi param need to be a const char*
+				vals.push(atoi(val.c_str()));
+				continue;
+			}
+			if(isOperator(cur)){
+				while(!ops.empty() && priority(ops.top()) >= priority(cur) ){
+					int y = vals.top(); vals.pop();
+					int x = vals.top(); vals.pop();
+					char op = ops.top(); ops.pop();
+					vals.push(calculateExp(x,y,op));
+				}
+				ops.push(cur);
 			}
 		
 		}
+		while(!ops.empty()){
+			int y = vals.top(); vals.pop();
+			int x = vals.top(); vals.pop();
+			char op = ops.top(); ops.pop();
+			vals.push(calculateExp(x,y,op));
+		}
+		return vals.top();
     }
 
-	bool isOp(char op){
+	bool isOperator(char op){
 		return (op=='+' || op=='-' || op=='*' || op=='/');
 	}
+	
+	int priority(char op){
+		if(op=='*' || op=='/')
+			return 2;
+		if(op=='+' || op=='-')
+			return 1;
+		return 0;
+	}
 
+	int calculateExp(int x, int y, char op){
+		switch(op){
+			case '+': return x + y;
+			case '-': return x - y;
+			case '*': return x * y;
+			case '/': return x / y;
+		}
+		printf("Error op %s for(%d,%d) \n", &op, x, y);
+		return -1;
+	}
 
 };
 
