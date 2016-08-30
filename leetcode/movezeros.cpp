@@ -25,8 +25,21 @@ public:
                  }
                 nums[nums.size()-1]=0;
             }
-			if(nums[i]==0)i--;
+        }
+    }
+    void myMoveZeroes(vector<int>& nums) {
+        int c=0;
+        for(int i=0; i<nums.size();i++){
+            if(nums[i]==0){
+                c++;
+                for(int j=i;j<nums.size()-1;j++){
+                    nums[j]=nums[j+1];
+                 }
+                nums[nums.size()-1]=0;
+            }
+	if(nums[i]==0)i--;
         }
 
     }
 };
+
