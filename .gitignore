@@ -6,4 +6,5 @@
 *.sdf
 *.suo
 *.out
+*.cpp~
 obj
