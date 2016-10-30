@@ -30,7 +30,45 @@ public:
 		}	
 	}
 };
-
+class Solution2 {
+    struct element{
+        int number,frequency;
+        bool operator < (const element arg) const{
+            return frequency < arg.frequency;
+        }
+    };
+    priority_queue <element> sol;//a heap auto sorted the order by frequency
+    vector<int> solution; 
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        sort(nums.begin(),nums.end());
+        int i=1;
+        for(; i < nums.size(); i++){
+            int freq = 1;
+            while(i<nums.size() && nums[i]==nums[i-1]){
+                i++;
+                freq++;
+            }
+            element e;
+            e.number = nums[i-1];
+            e.frequency = freq;
+            sol.push(e);
+        }
+		// in case of the only one element
+        if(i==nums.size()){
+            element e;
+            e.number = nums[i-1];
+            e.frequency = 1;
+            sol.push(e);
+        }
+        while(k){
+            solution.push_back(sol.top().number);
+            sol.pop();
+            k--;
+        }
+        return solution;
+    }
+};
 int main(){
 	Solution sol;
 	vector<int> nums;
