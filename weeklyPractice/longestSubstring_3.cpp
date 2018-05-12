@@ -4,9 +4,7 @@
 //
 //  Created by lu wenbo on 2018/5/11.
 //  Copyright © 2018 lu wenbo. All rights reserved.
-
-
-/* LeetCode:3
+/*
 3. Longest Substring Without Repeating Characters
 DescriptionHintsSubmissionsDiscussSolution
 Given a string, find the length of the longest substring without repeating characters.
@@ -17,18 +15,40 @@ Given "bbbbb", the answer is "b", with the length of 1.
 Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
 */
 
+/*
+    a b c a d d
+ 
+ */
 
 #include <iostream>
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <set>
 
 using namespace std;
 
 class Solution {
     public:
     //abcacb
-    int lengthOfLongestSubstring(std::string s) {
+    int lengthOfLongestSubstring(std::string s){
+        //记录每个字符之前最大的起始位置
+        std::vector<int> preCharPos(255,-1);
+        int strLen = (int)s.length();
+        if (strLen < 2) return strLen;
+        int maxLen = 1;
+        int curPos = -1;
+        int prePos = 0;
+        for(int i = 0; i<strLen; i++){
+            prePos = preCharPos[s[i]];
+            curPos = std::max(curPos,prePos);
+            int curLen = i - curPos;
+            preCharPos[s[i]] = i;
+            maxLen = std::max(maxLen, curLen);
+        }
+        return maxLen;
+    };
+    int lengthOfLongestSubstring1(std::string s) {
         this->s = s;
         int strlen =(int)s.length();
         if (strlen < 2) return strlen;
