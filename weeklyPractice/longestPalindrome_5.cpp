@@ -10,36 +10,51 @@ using namespace std;
 class Solution {
 public:
     string longestPalindrome(string s) {
-        int maxl = 1,curi=0,curj=0;
-        int size = s.size();
-        int half = size/2.0+1;
-        for(int i=0;i<half;i++){
-            for(int j=i+1;j<half;j++){
-                string sub1 = s.substr(i,j);
-                string sub2 = s.substr(i+j-1,j);
-                cout << "sub1=" << sub1 << ", sub2=" << sub2 << endl;
-                for(int k=0;k<j;k++){
-                    cout << "(" << i << "," << j << "," << k <<") : [j-k]="<< j-k<<" " <<s[j-k]<<", [j+k]="<< j+k<<" " <<s[j+k]<<endl;
-                    if(s[j-k]!=s[j+k]){
-                        cout << "break" <<endl;
-                        break;
+        int size = (int)s.size();
+        int curLeft=0,maxLen=1;
+        int i,j;
+        for(i=1;i< size; i++){
+            int tmpLeft0=0,tmpLen0=0;
+            int tmpLeft1=0,tmpLen1=0;
+            
+            for(j=1; j<=i; j++){
+                int jLeft=i-j;
+                int jRight=i+j-1;
+                if(tmpLeft0 > -1 && s[jLeft]==s[jRight]){
+                    tmpLeft0 = jLeft;
+                    tmpLen0 = j+j;
+                    //cout << "i=" << i << ", j=" << j << ", tmpLeft=" << tmpLeft0 << ", len=" << tmpLen0 << endl;
+                    if(tmpLen0 > maxLen){
+                        maxLen = tmpLen0;
+                        curLeft = tmpLeft0;
+                        cout <<"|-curLeft="<<curLeft<< ", length="<< maxLen << ", i=" << i <<", sub="<< s.substr(curLeft,maxLen)<<endl;
                     }
+                }else{
+                    tmpLeft0 = -1;
                 }
-                if (j+j>maxl) {
-                    maxl = j+j;
-                    curi=i;curj=j;
-                    cout << "new cur=" << s.substr(i,j+j)<< ", maxl=" << maxl << endl;
+                jRight=i+j;
+                if(tmpLeft1 > -1 && s[jLeft]==s[jRight]){
+                    tmpLeft1 = jLeft;
+                    tmpLen1 = j+j+1;
+                    //cout << "i=" << i << ", j=" << j << ", tmpLeft=" << tmpLeft1 << ", len=" << tmpLen1 << endl;
+                    if(tmpLen1 > maxLen){
+                        maxLen = tmpLen1;
+                        curLeft = tmpLeft1;
+                        cout <<"|-curLeft="<<curLeft<< ", length="<< maxLen << ", i=" << i <<", sub="<< s.substr(curLeft,maxLen)<<endl;
+                    }
+                }else{
+                    tmpLeft1 = -1;
                 }
             }
         }
-        return s.substr(curi,maxl);
-    }
+        return s.substr(curLeft,maxLen);
+    };
 };
 
 int main(){
-    string s ="alsabcdcbaxy";
+    string s ="aaabaaaa";
     Solution *sol = new Solution();
     string pal = sol->longestPalindrome(s);
-    cout << "palindrome:" << pal;
+    cout << "palindrome:" << pal << endl;
     return 0;
 }
